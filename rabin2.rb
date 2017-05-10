@@ -145,11 +145,3 @@ else
 	decrypt_time = Time.now - start
 	puts "İmza doğrulamasında geçen süre: #{decrypt_time}"
 end
-
-
-
-
-
-
-
-
