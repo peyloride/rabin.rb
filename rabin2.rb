@@ -59,6 +59,12 @@ def decrypt(cypher, p, q)
 	message_q1 = cypher.to_bn.mod_exp(((q+1)/4), q)
 	message_q2 = q - message_q1
 
+	puts "CRT'ye verilecek değerler;"
+	puts "p1: #{message_p1}"
+	puts "p2: #{message_p2}"
+	puts "q1: #{message_q1}"
+	puts "q2: #{message_q2}"
+
   crt_messages = []
 	crt_messages << chinese_remainder([p.to_i,q.to_i],[message_p1.to_i, message_q1.to_i])
 	crt_messages << chinese_remainder([p.to_i,q.to_i],[message_p1.to_i, message_q2.to_i])
@@ -121,13 +127,22 @@ else
 	start = Time.now
 	crt_messages = decrypt(cypher, p, q)
 
+	verified = false
+
 	crt_messages.each do |message|
+
+		puts "CRT Sonucu: #{message}"
 
 		if message == hash_value
 			puts "Dosya başarıyla doğrulandı"
 			puts "Dosyanın hash değeri: #{message}"
+			verified = true
 		end
 
+	end
+
+	if verified == false
+		puts "Dosya verilen değerler ile doğrulanamadı. Dosya bozulmuş ya da imza değerlerinde hata olabilir."
 	end
 	decrypt_time = Time.now - start
 	puts "İmza doğrulamasında geçen süre: #{decrypt_time}"
