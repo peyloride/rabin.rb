@@ -1,7 +1,5 @@
 require 'openssl'
 require 'digest'
-require 'benchmark'
-
 
 def findPrime (bits)
 	prime = 0
