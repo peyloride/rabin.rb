@@ -1,13 +1,17 @@
 require 'openssl'
 require 'digest'
+require 'benchmark'
 
 
 def findPrime (bits)
 	prime = 0
+	counter = 0
 	until prime % 4 == 3 do
 		prime = OpenSSL::BN::generate_prime(bits/2)
+		counter = counter + 1
 	end
-	return prime
+	puts "Anahtar değeri için yapılan deneme sayısı: #{counter}"
+	return prime.to_i
 end
 
 def genKeys(bits)
@@ -19,7 +23,7 @@ def genKeys(bits)
 end
 
 def encrypt(message,n)
-	message.to_i.to_bn.mod_exp(2, n).to_i
+	message.to_bn.mod_exp(2, n)
 end
 
 def extended_gcd(a, b)
@@ -62,28 +66,77 @@ def decrypt(cypher, p, q)
 	crt_messages << chinese_remainder([p.to_i,q.to_i],[message_p2.to_i, message_q2.to_i])
 end
 
-keys = genKeys(512);
+puts "işlem için dosya program ile aynı dizinde olmalıdır."
+puts "Dosyanın adını girin, uzantısı ile birlikte"
+data = File.read("#{gets.chomp}")
 
-p = keys[0]
+puts "SHA256 için 1, MD5 için 2 giriniz"
+hash_choice = gets.chomp
 
-q = keys[1]
-
-n = keys[2]
-
-
-string = (Digest::MD5.hexdigest "Hello!").to_i(16)
-
-puts string
-
-cypher = encrypt(string, n)
-
-p "cypher #{cypher}"
-
-crt_messages = decrypt(cypher, p, q)
-
-crt_messages.each do |message|
-
-  puts message
-
+if hash_choice == 1
+	hash_value = (Digest::SHA256.hexdigest(data)).to_i(16)
+elsif
+	hash_value = (Digest::MD5.hexdigest(data)).to_i(16)
 end
+
+puts "Dosya imzalamak için 1, İmza doğrulamak için 2'ye basın"
+choice = gets.chomp.to_i
+
+if choice == 1
+
+	puts "Anahtar değerleri için bit uzayını belirtin, tavsiye edilen değer 512'dir."
+	bits = gets.chomp.to_i
+
+	start = Time.now
+	keys = genKeys(bits)
+	key_generation_time = Time.now - start
+
+	puts "Anahtar oluşturulması için geçen süre: #{key_generation_time}"
+	
+
+	p = keys[0]
+	puts "p: #{p}"
+
+	q = keys[1]
+	puts "q: #{q}"
+
+	n = keys[2]
+	puts "n: #{n}"
+
+	puts "Dosyanın hash değeri: #{hash_value}"
+
+	cypher = encrypt(hash_value, n)
+
+	puts "İmza değeri: #{cypher}"
+
+else
+
+	puts "İmzayı giriniz"
+	cypher = gets.chomp.to_i
+	puts "p değerini giriniz"
+	p = gets.chomp.to_i
+	puts "q değerini giriniz"
+	q = gets.chomp.to_i
+
+	start = Time.now
+	crt_messages = decrypt(cypher, p, q)
+
+	crt_messages.each do |message|
+
+		if message == hash_value
+			puts "Dosya başarıyla doğrulandı"
+			puts "Dosyanın hash değeri: #{message}"
+		end
+
+	end
+	decrypt_time = Time.now - start
+	puts "İmza doğrulamasında geçen süre: #{decrypt_time}"
+end
+
+
+
+
+
+
+
 
