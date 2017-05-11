@@ -11,4 +11,5 @@ To see how it behaves on corrupted or modified files, you can use corrupter.rb t
 ## Note
 
 This project uses Ruby's OpenSSL,Digest and SecureRandom libraries.
+
 Only tested on Linux(Arch Linux and Solus Linux).
