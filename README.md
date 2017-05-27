@@ -1,4 +1,4 @@
-# Rabin Encryption Implementation on Ruby
+# Rabin Encryption and Digital Signing Implementation on Ruby
 
 ## Rabin Encryption
 
