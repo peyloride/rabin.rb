@@ -1,15 +1,21 @@
 # Rabin Encryption Implementation on Ruby
 
-## Usage
+## Rabin Encryption
 
-Just use ruby rabin.rb to get started.
+Just use ruby rabin_encryption.rb to get started.
+
+## Rabin Signing
+
+You can see usage with ruby rabin_signing.rb.
 
 ## Corrupter
 
-To see how it behaves on corrupted or modified files, you can use corrupter.rb to corrupt your dummy file and try to verify with your signature. Usage same as rabin.rb.
+To see how it behaves on corrupted or modified files, you can use corrupter.rb to corrupt your dummy file and try to verify. Usage same as rabin_encryption.rb.
+
+PS: Beware, corrupter.rb has issues with Ruby version 2.2
 
 ## Note
 
-This project uses Ruby's OpenSSL,Digest and SecureRandom libraries.
+This project uses Ruby's OpenSSL,Digest, Prime and SecureRandom libraries.
 
-Only tested on Linux(Arch Linux and Solus Linux).
+Only tested on Linux(Arch Linux and Solus Linux) Ruby Version 2.4.1.
